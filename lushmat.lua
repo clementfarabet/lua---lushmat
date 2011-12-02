@@ -83,6 +83,11 @@ function lushmat.load(idxfile)
       tensorSize[i] = toint()
    end
 
+   -- extra unused dims (they always save 3 dims, for some reason...)
+   for i = dims+1,3 do
+      toint()
+   end
+
    -- load data
    local result
    if magic == 507333713 or magic == 0x0D then
