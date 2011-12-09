@@ -26,6 +26,23 @@ int fillIntTensor(lua_State *L) {
   return 0;
 }
 
+int fillLongTensor(lua_State *L) {
+  // tensor to fill:
+  THLongTensor *tofill = luaT_checkudata(L, 1, luaT_checktypename2id(L, "torch.LongTensor"));
+  // source storage:
+  THByteStorage *toget = luaT_checkudata(L, 2, luaT_checktypename2id(L, "torch.ByteStorage"));
+  // optional pointer:
+  int pointer = 0;
+  if (lua_isnumber(L, 3)) pointer = lua_tonumber(L, 3) - 1;
+  // char pointers:
+  unsigned char *src = (unsigned char *)toget->data;
+  unsigned char *dest = (unsigned char *)THLongTensor_data(tofill);
+  long int size = tofill->storage->size * sizeof(long);
+  // fill:
+  memcpy(dest, src+pointer, size);
+  return 0;
+}
+
 int fillByteTensor(lua_State *L) {
   // tensor to fill:
   THByteTensor *tofill = luaT_checkudata(L, 1, luaT_checktypename2id(L, "torch.ByteTensor"));
@@ -82,6 +99,7 @@ static const struct luaL_reg matlab [] = {
   {"fillDoubleTensor", fillDoubleTensor},
   {"fillFloatTensor", fillFloatTensor},
   {"fillIntTensor", fillIntTensor},
+  {"fillLongTensor", fillLongTensor},
   {"fillByteTensor", fillByteTensor},
   {NULL, NULL}  /* sentinel */
 };

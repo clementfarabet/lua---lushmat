@@ -103,7 +103,8 @@ function lushmat.load(idxfile)
       result = torch.IntTensor(tensorSize)
       liblushmat.fillIntTensor(result, binary, headerp)
    elseif magic == 507333720 then
-      error('<lushmat.load> error: long is not supported')
+      result = torch.LongTensor():resize(tensorSize)
+      liblushmat.fillLongTensor(result, binary, headerp)
    else
       error('<lushmat.load> error: unknown magic number = ' .. magic)
    end
